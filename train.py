@@ -6,7 +6,7 @@ import numpy as np
 
 from gpt import MingGPT
 from utils import load_into, save
-from config import TOTAL_STEPS, BATCH_SIZE, SEED, SAVE_STEPS, C, L, D, DH, H, DROP_RATE, VOCAB_SIZE, VOCAB_PATH, WARMUP_STEPS, PEAK_LR, SAVE_PATH, INDICES_PATH, BASE_NAME
+from config import TOTAL_STEPS, BATCH_SIZE, SEED, SAVE_STEPS, C, L, D, DH, H, DROP_RATE, VOCAB_SIZE, VOCAB_PATH, WARMUP_STEPS, PEAK_LR, SAVE_PATH, INDICES_PATH, BASE_NAME, ‎TRAIN_TEXT_PATH
 
 
 my_model = MingGPT(jax.random.key(SEED))
@@ -32,6 +32,7 @@ print(f"dim head: {DH}")
 print("___")
 print("TRAINING SETTINGS")
 print(f"Seed: {SEED}")
+print(f"Text: {‎TRAIN_TEXT_PATH}")
 print(f"Batch size: {BATCH_SIZE}")
 print(f"Total steps: {TOTAL_STEPS}")
 print(f"Warmup steps: {WARMUP_STEPS}")
