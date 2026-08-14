@@ -38,6 +38,6 @@ def tokenize(sorted_vocabulary, text):
             tokens.append(UNK_TOKEN)
             i += 1
 
-        if random.random() > 0.99999:
+        if random.random() > 0.999999:
             print(f"Progress: {i}/{n}")
     return tokens

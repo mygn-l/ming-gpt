@@ -1,7 +1,7 @@
 import jax
 import jax.numpy as jnp
 
-from config import WARMUP_STEPS, PEAK_LR, WEIGHT_DECAY, MAX_GRAD_NORM, B1, B2
+from config import TOTAL_STEPS, WARMUP_STEPS, PEAK_LR, MIN_LR, WEIGHT_DECAY, MAX_GRAD_NORM, B1, B2
 
 
 EPSILON = 1e-8
@@ -23,7 +23,13 @@ def adam(params, grads, state):
 
     t = state["t"] + 1
 
-    lr = PEAK_LR * jnp.minimum(1.0, t / WARMUP_STEPS)
+    """
+    Warmup and decay by Claude
+    """
+    warmup_lr = PEAK_LR * t / WARMUP_STEPS
+    progress = jnp.clip((t - WARMUP_STEPS) / (TOTAL_STEPS - WARMUP_STEPS), 0.0, 1.0)
+    cosine_lr = MIN_LR + 0.5 * (PEAK_LR - MIN_LR) * (1 + jnp.cos(jnp.pi * progress))
+    lr = jnp.minimum(warmup_lr, cosine_lr)
 
     m = jax.tree.map(lambda m, g: B1 * m + (1 - B1) * g, state["m"], normed_grads)
     v = jax.tree.map(lambda v, g: B2 * v + (1 - B2) * g * g, state["v"], normed_grads)

@@ -37,7 +37,7 @@ watch -n 1 nvidia-smi
 ```
 When training is done, download `./ming-gpt/base`.
 
-For fine-tuning, first change learning rate to `3e-5` in `config.py`, then continue training with
+For fine-tuning, change the settings inside `config.py` marked with `TODO`, then continue training with
 ```bash
 python fine_tune.py
 ```

@@ -1,6 +1,7 @@
 import json
 import random
 import os
+from functools import partial
 
 import jax
 import jax.numpy as jnp
@@ -18,8 +19,8 @@ from adam import init_adam, adam
 from config import C, D, H, DH, L, DROP_RATE, TEMP, TOP_K, SAVE_PATH, VOCAB_SIZE
 
 
-@jax.jit
-def forward(key, params, indices, PE):
+@partial(jax.jit, static_argnames=("drop_rate",))
+def forward(key, params, indices, PE, drop_rate=DROP_RATE):
     keys = jax.random.split(key, L)
 
     params = jax.tree.map(lambda x: x.astype(jnp.bfloat16), params)
@@ -32,7 +33,7 @@ def forward(key, params, indices, PE):
         current_layer = current_layer + attention(
             key, param_i["attention"],
             rms_norm(param_i["rms norm 1"], current_layer),
-            drop_rate=DROP_RATE)
+            drop_rate=drop_rate)
         current_layer = current_layer + swiglu(
             param_i["swiglu"],
             rms_norm(param_i["rms norm 2"], current_layer))
@@ -106,7 +107,7 @@ class MingGPT:
         n = indices.shape[0]
         padded = jnp.zeros(C, dtype=indices.dtype).at[:n].set(indices)
 
-        unembedding = forward(keys[0], self.params, padded, self.PE)[n - 1]
+        unembedding = forward(keys[0], self.params, padded, self.PE, drop_rate=0.0)[n - 1]
 
         return sample_word(keys[1], self.vocabulary, unembedding, TEMP, TOP_K)
 
@@ -120,22 +121,23 @@ class MingGPT:
 
     def infer_prompt(self, prompt):
         input_text = f"{USER_TOKEN} {prompt} {ASS_TOKEN}".lower()
+
+        tokens = tokenize(self.vocabulary, input_text)
+        tokens = tokens[-C:]
+
+        indices = jnp.array(get_embed_indices(self.vocabulary, tokens))
+        
         output_text = ""
         for i in range(1000):
             key = jax.random.key(random.randint(0, 1000))
 
-            # get last C tokens
-            tokens = tokenize(self.vocabulary, input_text)
-            if len(tokens) > C:
-                tokens = tokens[len(tokens) - C :]
-
-            indices = jnp.array(get_embed_indices(self.vocabulary, tokens))
-
             token = self.infer(key, indices)
             if token == STOP_TOKEN:
                 break
-            input_text += token
+
             output_text += token
+            indices = jnp.concatenate((indices, jnp.array(get_embed_indices(self.vocabulary, [token]))))
+            indices = indices[-C:]
         else:
             return "Error: generated response too long"
 

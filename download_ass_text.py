@@ -20,5 +20,5 @@ with open(ASS_TEXT_PATH, "w", encoding="utf-8") as f:
         f.write(f"{USER_TOKEN} {user} {ASS_TOKEN} {row['output']} {STOP_TOKEN}\n")
 
         i += 1
-        if i % 1000 == 0:
-            print(f"Writing progress: {i}")
+        if i % 10000 == 0:
+            print(f"Writing progress: {i} rows")

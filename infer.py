@@ -8,4 +8,4 @@ def get_response(prompt):
     print(model.infer_prompt(prompt))
 
 if __name__ == "__main__":
-    get_response("How are you doing?")
+    get_response("Give three tips for staying healthy.")

@@ -8,7 +8,7 @@ from datasets import load_dataset
 from config import TRAIN_TEXT_PATH, VOCAB_PATH
 
 
-MAX_BYTES = 4_000_000_000
+MAX_BYTES = 10_000_000_000
 VOCAB_MAX_BYTES = 300_000_000
 
 ds = load_dataset("HuggingFaceFW/fineweb", "sample-10BT", split="train", streaming=True)
@@ -30,5 +30,5 @@ with open(TRAIN_TEXT_PATH, "w", encoding="utf-8") as text_f, open(VOCAB_PATH, "w
             break
 
         i += 1
-        if i % 1000 == 0:
-            print(f"Writing progress: {i}")
+        if i % 10000 == 0:
+            print(f"Writing progress: {i} rows")

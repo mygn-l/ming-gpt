@@ -17,13 +17,14 @@ SEED = 42
 
 BATCH_SIZE = 8
 
-TOTAL_STEPS = 25000
+TOTAL_STEPS = 300000                        # TODO: 2000 steps for fine-tuning
 WARMUP_STEPS = int(0.02 * TOTAL_STEPS)
-SAVE_STEPS = 5000
-PEAK_LR = 3e-4                            #3e-5 for fine-tuning
+SAVE_STEPS = 5000                           # TODO: 500 steps for fine-tuning
+PEAK_LR = 3e-4                              # TODO: 3e-5 for fine-tuning
+MIN_LR = PEAK_LR / 10
 TRAIN_TEXT_PATH = "./train-text.txt"
 ASS_TEXT_PATH = "./ass-text.txt"
-INDICES_PATH = "./train-text-indices.npy" # pretokenized indices, produced by pretokenize_to_indices.py
+INDICES_PATH = "./train-text-indices.npy"   # pretokenized indices, produced by pretokenize_to_indices.py
 ASS_INDICES_PATH = "./ass-text-indices.npy" # produced by pretokenize_ass_to_indices.py
 
 SAVE_PATH = "./ming-gpt"
