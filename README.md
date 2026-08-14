@@ -50,3 +50,7 @@ Run
 python infer.py
 ```
 You can import the `get_response` function from `infer.py` into your own code.
+
+An already-trained model can be found on HuggingFace: https://huggingface.co/YsayeBach/ming-gpt
+
+Simply download the `model` file into the `./ming-gpt` folder.
