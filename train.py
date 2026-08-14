@@ -15,7 +15,7 @@ if os.path.isfile(os.path.join(SAVE_PATH, BASE_NAME)):
     load_into(my_model, BASE_NAME)
 
 
-indices = jnp.array(np.load(INDICES_PATH))
+indices = np.load(INDICES_PATH)
 
 print(f"Started training for MING-GPT")
 print("___")
@@ -44,8 +44,8 @@ print(f"Model checkpoint will be saved at every {SAVE_STEPS} steps")
 for i in range(TOTAL_STEPS):
     key = jax.random.key(i)
 
-    starts = jax.random.randint(key, (BATCH_SIZE, 1), 0, len(indices) - C - 1)
-    furthers = jnp.arange(C)
+    starts = jax.random.randint(key, (BATCH_SIZE, 1), 0, jnp.array(len(indices) - C - 1, dtype=jnp.uint32), dtype=jnp.uint32)
+    furthers = jnp.arange(C, dtype=jnp.uint32)
     input_indices = indices[starts + furthers]
     target_indices = indices[starts + furthers + 1]
 
