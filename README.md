@@ -41,6 +41,7 @@ For fine-tuning, change the settings inside `config.py` marked with `TODO`, then
 ```bash
 python fine_tune.py
 ```
+When fine-tuning is done, download `./ming-gpt/model`.
 
 MAKE SURE TO DELETE YOUR INSTANCE AFTER USAGE. THEY WILL KEEP INCURRING FEES.
 
